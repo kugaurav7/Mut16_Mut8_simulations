@@ -1,0 +1,17 @@
+import gsd.hoomd
+import MDAnalysis as mda
+
+# Load GSD file
+gsd_file = "Simulation_resume_dump3.gsd"
+pdb_output = "topology.pdb"
+
+# Try opening in 'r' mode instead of 'rb'
+with gsd.hoomd.open(gsd_file, 'r') as traj:
+    snap = traj[0]  # Extract first snapshot
+
+# Convert to MDAnalysis format and save as PDB
+u = mda.Universe.empty(n_atoms=snap.particles.N, trajectory=True)
+u.atoms.positions = snap.particles.position  # Assign atom positions
+u.atoms.write(pdb_output)
+
+print(f"First frame saved as: {pdb_output}")
